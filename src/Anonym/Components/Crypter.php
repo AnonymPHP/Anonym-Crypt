@@ -17,7 +17,7 @@
     {
 
         /**
-         * @var CrypterInterface
+         * @var CrypterEncodeableInterface
          */
         private $crypter;
 
@@ -45,7 +45,13 @@
          * @return string
          */
         public function encode($encode = ''){
-            return $this->getCrypter()->encode($encode);
+            $crypter = $this->getCrypter();
+
+            if($crypter instanceof CrypterEncodeableInterface){
+                return $crypter->encode($encode);
+            }else{
+                return false;
+            }
         }
 
         /**
@@ -55,7 +61,13 @@
          * @return string
          */
         public function decode($decode = ''){
-            return $this->getCrypter()->decode($decode);
+            $crypter = $this->getCrypter();
+
+            if($crypter instanceof CrypterDecodeableInterface){
+                return $crypter->decode($decode);
+            }else{
+                return false;
+            }
         }
 
         /**
@@ -67,7 +79,7 @@
         }
 
         /**
-         * @param CrypterInterface $crypter
+         * @param CrypterEncodeableInterface $crypter
          * @return Crypter
          */
         public function setCrypter($crypter)

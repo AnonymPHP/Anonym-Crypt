@@ -10,17 +10,18 @@
     namespace Anonym\Components\Crypt;
 
     /**
-     * Interface CrypterInterface
+     * Interface CrypterDecodeableInterface
      * @package Anonym\Components\Crypt
      */
-    interface CrypterEncodeableInterface
+    interface CrypterDecodeableInterface
     {
 
         /**
-         * Veriyi şifreler
+         * Şifrelenmiş metni çözer
          *
          * @param string $value
          * @return string
          */
-        public function encode($value = '');
+        public function decode($value = '');
+
     }

@@ -10,11 +10,13 @@
     namespace Anonym\Components\Crypt;
     use Exception;
     use InvalidArgumentException;
+    use Anonym\Components\Crypt\CrypterEncodeableInterface;
+    use Anonym\Components\Crypt\CrypterDecodeableInterface;
     /**
      * Class AnonymCrypt
      * @package Anonym\Components\Crypt
      */
-    class AnonymCrypt implements CrypterInterface
+    class AnonymCrypt implements CrypterDecodeableInterface,CrypterEncodeableInterface
     {
 
         /**
@@ -141,6 +143,7 @@
          */
         public function decode($value = '')
         {
+
             if (is_string($value)) {
                 $payload = $this->parsePayload($value);
                 return $this->decrypt($payload);
