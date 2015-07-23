@@ -35,6 +35,6 @@
             $con2 = $letters[$len.$son];
             $serverIP = $_SERVER['SERVER_ADDR'];
 
-            return $son . $serverIP . $con . $con2 . $ip . $bas;
+            return md5($son . $serverIP . $con . $con2 . $ip . $bas);
         }
     }
