@@ -71,7 +71,7 @@
         }
 
         /**
-         * @return CrypterInterface
+         * @return CrypterEncodeableInterface
          */
         public function getCrypter()
         {
