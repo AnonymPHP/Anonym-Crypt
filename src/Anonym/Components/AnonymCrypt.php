@@ -58,21 +58,21 @@
 
             $this->setSecurityKey('AnonymCrypter');
         }
+
+
         /**
-         * Şifrelenmiş metni oluşturur
+         * Metni şifreler
          *
          * @param string $value
          * @return string
-         * @return mixed
          */
-        public function encode($value = '')
-        {
-            if (is_string($value)) {
-                $iv = mcrypt_create_iv($this->getIvSize(), $this->getRandomizer());
-                $base = base64_encode(json_encode($this->payloadCreator($this->encrypt($value, $iv), $iv)));
-                return $base;
-            }
+        public function encode($value = ''){
+            $iv = mcrypt_create_iv($this->getIvSize(), $this->getRandomizer());
+            $base = base64_encode(serialize($this->payloadCreator($this->encrypt($value, $iv), $iv)));
+            return $base;
         }
+
+
         /**
          * @param string $value
          * @param        $iv
@@ -81,14 +81,15 @@
          */
         private function encrypt($value = '', $iv)
         {
-            $value = $this->returnCleanAndHexedValue($value);
+            $value = trim($value);
             try {
-                $crypted = mcrypt_encrypt($this->alogirtym, $this->securityKey, $value, $this->mode, $iv);
+                $crypted = mcrypt_encrypt($this->getAlogirtym(), $this->getSecurityKey(), $value, $this->getMode(), $iv);
                 return $crypted;
             } catch (Exception $e) {
                 //
             }
         }
+
         /**
          * Value ve iv değerlerini kullanılmak için hazırlar
          *
@@ -99,41 +100,11 @@
         private function payloadCreator($creypted, $iv)
         {
             return [
-                'value' => base64_encode($creypted),
-                'iv'    => base64_encode($iv),
+                'value' => $creypted,
+                'iv'    => $iv,
             ];
         }
-        /**
-         * Temizlenmiş value değeri oluşturur
-         *
-         * @param string $value
-         * @return string
-         */
-        private function returnCleanAndHexedValue($value = '')
-        {
-            $value = trim($value);
-            return $value;
-        }
-        /**
-         * Randomizer i döndürür
-         *
-         * @return int
-         */
-        private function getRandomizer()
-        {
-            if ($this->getRand()) {
-                return $this->getRand();
-            }
-        }
-        /**
-         * Iv uzunluÄŸunu DÃ¶ndÃ¼rÃ¼r
-         *
-         * @return int
-         */
-        private function getIvSize()
-        {
-            return mcrypt_get_iv_size($this->getAlogirtym(), $this->getMode());
-        }
+
 
         /**
          * Şifrelenmiş metni çözer
@@ -143,7 +114,6 @@
          */
         public function decode($value = '')
         {
-
             if (is_string($value)) {
                 $payload = $this->parsePayload($value);
                 return $this->decrypt($payload);
@@ -156,12 +126,11 @@
          */
         private function parsePayload($value)
         {
-            $based = (array)json_decode(base64_decode($value));
+            $based = unserialize(base64_decode($value));
             if (isset($based['value']) && isset($based['iv'])) {
-                return [
-                    'value' => base64_decode($based['value']),
-                    'iv'    => base64_decode($based['iv'])
-                ];
+                return $based;
+            }else{
+                return [];
             }
         }
         /**
@@ -174,18 +143,30 @@
         {
             $iv = $payload['iv'];
             $value = $payload['value'];
-            $value = $this->returnCleanAndDeHexedValue($value);
+            $value = trim($value);
             return mcrypt_decrypt($this->getAlogirtym(), $this->getSecurityKey(), $value, $this->getMode(), $iv);
         }
+
         /**
-         * @param $value
-         * @return string
-         * Parametreyi temizler ve hexden çıkarır
+         * Randomizer i döndürür
+         *
+         * @return int
          */
-        private function returnCleanAndDeHexedValue($value)
+        private function getRandomizer()
         {
-            $value = trim($value);
-            return $value;
+            if ($this->getRand()) {
+                return $this->getRand();
+            }
+        }
+
+        /**
+         * Iv uzunluÄŸunu DÃ¶ndÃ¼rÃ¼r
+         *
+         * @return int
+         */
+        private function getIvSize()
+        {
+            return mcrypt_get_iv_size($this->getAlogirtym(), $this->getMode());
         }
 
         /**
