@@ -15,7 +15,7 @@
       "homepage": "http://www.gemframework.com"
     }
   ],
-  "require": {
+  "required-dev": {
     "php": ">=5.4.0"
   },
   "autoload": {
