@@ -32,7 +32,7 @@
             $bas = substr($ip, 0, 2);
             $con = $letters[$len];
             $son = substr($ip, $len - 1, 1);
-            $int = $len+$son;
+            $int = strval($len).$son;
             $con2 = $letters[$int];
             $serverIP = $_SERVER['SERVER_ADDR'];
             $message = $son . $serverIP . $con . $con2 . $ip . $bas;
