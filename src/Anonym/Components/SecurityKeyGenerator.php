@@ -38,4 +38,17 @@
             $message = $son . $serverIP . $con . $con2 . $ip . $bas;
             return md5($message);
         }
+
+        /**
+         * create a random string
+         *
+         * @param string $prefix
+         * @return string
+         */
+        public function random($prefix = ''){
+            $key = $prefix.$this->create();
+            $uniqid = uniqid($key);
+
+            return md5($uniqid);
+        }
     }
